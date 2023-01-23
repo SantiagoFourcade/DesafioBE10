@@ -4,6 +4,7 @@ const path = require(`path`);
 const morgan = require(`morgan`);
 const passport = require(`passport`); 
 const session = require(`express-session`);
+const flash = require(`connect-flash`);
 
 
 // Inicializaciones
@@ -25,8 +26,19 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+
+//middleware: mensaje global
+
+app.use((req, res, next) => {
+    app.locals.signupMessage = req.flash(`sugnupMessage`);
+    app.locals.signinMessage = req.flash(`sugninMessage`);
+    next();
+});
+
+
 
 // Routes
 app.use(`/`, require(`./routes/index`));
